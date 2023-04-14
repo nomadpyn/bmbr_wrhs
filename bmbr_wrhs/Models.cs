@@ -45,7 +45,7 @@ namespace bmbr_wrhs
         public Car ? CarBelong { get; set; }
         public override string ToString()
         {
-            return this.Color.ToString();
+            return this.Color.ColorName;
         }
 
     }

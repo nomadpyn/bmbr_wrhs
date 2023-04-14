@@ -11,6 +11,8 @@ namespace bmbr_wrhs
     public class AppContext : DbContext
     {
         public DbSet<AutoPart> Autoparts { get; set; } = null!;
+        public DbSet<Car> Car { get; set; } = null!;
+        public DbSet<CarColor> CarColor { get; set; } = null!;
 
         public AppContext()
         {
