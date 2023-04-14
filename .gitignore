@@ -361,3 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/bmbr_wrhs/App.config
+/bmbr_wrhs_wndw/App.config

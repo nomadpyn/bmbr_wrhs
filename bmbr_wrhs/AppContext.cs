@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Configuration;
 
 namespace bmbr_wrhs
 {
@@ -16,8 +17,8 @@ namespace bmbr_wrhs
             Database.EnsureCreated();
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlite("Data Source = bumbers.db");
+        {           
+            optionsBuilder.UseSqlite(ConfigurationManager.ConnectionStrings["BumpersDatabase"].ConnectionString);
         }
     }
 }
