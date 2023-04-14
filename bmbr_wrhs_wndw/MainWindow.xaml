@@ -19,6 +19,7 @@
         </Grid.RowDefinitions>
         <Button Name="load_all_button" Grid.Column="0" Grid.Row="0" Margin="10" Click="load_all_button_Click">Загрузить все</Button>
         <Button Name="load_not_null_button" Grid.Column="1" Grid.Row="0" Margin="10" Click="load_not_null_button_Click">Загрузить наличие</Button>
+        <Button Name="search_button" Grid.Column="2" Grid.Row="0" Margin="10" Click="search_button_Click">Найти деталь</Button>
         <DataGrid Name="bumber_data_grid" Grid.ColumnSpan="4" Grid.Column="0" Grid.Row="1"/>
     </Grid>
 </Window>
