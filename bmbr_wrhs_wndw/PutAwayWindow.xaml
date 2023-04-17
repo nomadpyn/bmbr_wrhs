@@ -8,11 +8,11 @@
         Title="Списание детали" Height="260" Width="300" WindowStartupLocation="CenterOwner"  ResizeMode="NoResize">
     <UniformGrid Columns="1">
         <TextBlock TextAlignment="Center" Margin="5">Выберите авто</TextBlock>
-        <ComboBox Name="autoBox" Margin="5" SelectedValuePath="Id"></ComboBox>
-        <TextBlock TextAlignment="Center" Margin="5">Выберите тип детали</TextBlock>
-        <ComboBox Name="typeBox" Margin="5" SelectedValuePath="Id"></ComboBox>
+        <ComboBox Name="autoBox" Margin="5" SelectedValuePath="Id" SelectionChanged="autoBox_SelectionChanged"></ComboBox>
         <TextBlock TextAlignment="Center" Margin="5">Выберите цвет</TextBlock>
-        <ComboBox Name="colorBox" Margin="5" SelectedValuePath="Id" ></ComboBox>
-        <Button Name="searchButton" Margin="5" IsEnabled="false">Убрать</Button>
+        <ComboBox Name="colorBox" Margin="5" SelectedValuePath="Id" SelectionChanged="colorBox_SelectionChanged"></ComboBox>
+        <TextBlock TextAlignment="Center" Margin="5">Выберите тип детали</TextBlock>
+        <ComboBox Name="typeBox" Margin="5" SelectedValuePath="Id" SelectionChanged="typeBox_SelectionChanged"></ComboBox>        
+        <Button Name="putButton" Margin="5" IsEnabled="false">Убрать</Button>
     </UniformGrid>
 </Window>
