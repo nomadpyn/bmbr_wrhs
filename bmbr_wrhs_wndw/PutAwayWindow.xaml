@@ -1,0 +1,18 @@
+﻿<Window x:Class="bmbr_wrhs_wndw.PutAwayWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:bmbr_wrhs_wndw"
+        mc:Ignorable="d"
+        Title="Списание детали" Height="260" Width="300" WindowStartupLocation="CenterOwner"  ResizeMode="NoResize">
+    <UniformGrid Columns="1">
+        <TextBlock TextAlignment="Center" Margin="5">Выберите авто</TextBlock>
+        <ComboBox Name="autoBox" Margin="5" SelectedValuePath="Id"></ComboBox>
+        <TextBlock TextAlignment="Center" Margin="5">Выберите тип детали</TextBlock>
+        <ComboBox Name="typeBox" Margin="5" SelectedValuePath="Id"></ComboBox>
+        <TextBlock TextAlignment="Center" Margin="5">Выберите цвет</TextBlock>
+        <ComboBox Name="colorBox" Margin="5" SelectedValuePath="Id" ></ComboBox>
+        <Button Name="searchButton" Margin="5" IsEnabled="false">Убрать</Button>
+    </UniformGrid>
+</Window>

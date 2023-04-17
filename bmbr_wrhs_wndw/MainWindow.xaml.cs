@@ -56,6 +56,12 @@ namespace bmbr_wrhs_wndw
                 this.bumber_data_grid.ItemsSource = data;
             }
         }
-        
+
+        private void sell_button_Click(object sender, RoutedEventArgs e)
+        {
+            PutAwayWindow nw = new();
+            nw.Owner = this;
+            nw.ShowDialog();
+        }
     }
 }
