@@ -36,7 +36,6 @@ namespace bmbr_wrhs
             db.Dispose();
             return data;
         }
-
         public static List<CarColor> getCarColor(int id)
         {
             AppContext db = new AppContext();
@@ -60,6 +59,17 @@ namespace bmbr_wrhs
                 .ToList();
             db.Dispose();
             return data;
+        }
+        public static void putAwayPart(int partId)
+        {
+            AppContext db = new();
+            AutoPart ap = db.Autoparts.FirstOrDefault(c => c.Id == partId);
+            if(ap != null)
+            {
+                ap.Count--;
+                db.SaveChanges();
+            }
+            db.Dispose();
         }
     }
 }
