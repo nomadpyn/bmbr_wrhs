@@ -20,6 +20,7 @@ namespace bmbr_wrhs_wndw
     /// </summary>
     public partial class PutAwayWindow : Window
     {
+        private int AutoPartId;
         public PutAwayWindow()
         {
             InitializeComponent();
@@ -55,6 +56,7 @@ namespace bmbr_wrhs_wndw
                 if (data[0].Count > 0)
                 {
                     this.putButton.IsEnabled = true;
+                    this.AutoPartId = data[0].Id;
                 }
             }
             else
@@ -62,6 +64,12 @@ namespace bmbr_wrhs_wndw
                 this.putButton.IsEnabled = false;
                 this.partCount.Text = "Количество на складе:";
             }
+        }
+
+        private void putButton_Click(object sender, RoutedEventArgs e)
+        {
+            GetClass.putAwayPart(this.AutoPartId);
+            this.Close();
         }
     }
 }

@@ -14,6 +14,6 @@
         <TextBlock TextAlignment="Center" Margin="5">Выберите тип детали</TextBlock>
         <ComboBox Name="typeBox" Margin="5" SelectedValuePath="Id" SelectionChanged="typeBox_SelectionChanged"></ComboBox>
         <TextBlock Name="partCount" TextAlignment="Center" Margin="5">Количество на складе:</TextBlock>
-        <Button Name="putButton" Margin="5" IsEnabled="false">Убрать</Button>
+        <Button Name="putButton" Margin="5" IsEnabled="false" Click="putButton_Click" >Убрать</Button>
     </UniformGrid>
 </Window>
