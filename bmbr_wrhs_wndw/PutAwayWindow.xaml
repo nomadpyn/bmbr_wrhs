@@ -5,14 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:bmbr_wrhs_wndw"
         mc:Ignorable="d"
-        Title="Списание детали" Height="260" Width="300" WindowStartupLocation="CenterOwner"  ResizeMode="NoResize">
+        Title="Списание детали" Height="300" Width="300" WindowStartupLocation="CenterOwner"  ResizeMode="NoResize">
     <UniformGrid Columns="1">
         <TextBlock TextAlignment="Center" Margin="5">Выберите авто</TextBlock>
         <ComboBox Name="autoBox" Margin="5" SelectedValuePath="Id" SelectionChanged="autoBox_SelectionChanged"></ComboBox>
         <TextBlock TextAlignment="Center" Margin="5">Выберите цвет</TextBlock>
         <ComboBox Name="colorBox" Margin="5" SelectedValuePath="Id" SelectionChanged="colorBox_SelectionChanged"></ComboBox>
         <TextBlock TextAlignment="Center" Margin="5">Выберите тип детали</TextBlock>
-        <ComboBox Name="typeBox" Margin="5" SelectedValuePath="Id" SelectionChanged="typeBox_SelectionChanged"></ComboBox>        
+        <ComboBox Name="typeBox" Margin="5" SelectedValuePath="Id" SelectionChanged="typeBox_SelectionChanged"></ComboBox>
+        <TextBlock Name="partCount" TextAlignment="Center" Margin="5">Количество на складе:</TextBlock>
         <Button Name="putButton" Margin="5" IsEnabled="false">Убрать</Button>
     </UniformGrid>
 </Window>

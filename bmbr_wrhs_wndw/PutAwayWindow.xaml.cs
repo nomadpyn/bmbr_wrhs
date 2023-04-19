@@ -49,9 +49,19 @@ namespace bmbr_wrhs_wndw
         private void typeBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (autoBox.ItemsSource != null && colorBox.ItemsSource != null && typeBox.ItemsSource != null)
-                this.putButton.IsEnabled = true;
+            {                
+                var data = GetClass.getAutoPartsbySearch((int)autoBox.SelectedValue, (int)colorBox.SelectedValue);
+                this.partCount.Text = "Количество на складе: " + data[0].Count;
+                if (data[0].Count > 0)
+                {
+                    this.putButton.IsEnabled = true;
+                }
+            }
             else
+            {
                 this.putButton.IsEnabled = false;
+                this.partCount.Text = "Количество на складе:";
+            }
         }
     }
 }
