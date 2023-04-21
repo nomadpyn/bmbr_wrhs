@@ -63,9 +63,16 @@ namespace bmbr_wrhs
         public static void putAwayPart(int partId)
         {
             AppContext db = new();
-            AutoPart ap = db.Autoparts.FirstOrDefault(c => c.Id == partId);
+            AutoPart ap = db.Autoparts
+                .Include(u => u.PartType)
+                .Include(u => u.Car)
+                .Include(u => u.Color)
+                .ThenInclude(c => c!.Color)
+                .FirstOrDefault(c => c.Id == partId);
             if(ap != null)
             {
+                SoldPart sp = new SoldPart { Date = DateTime.Now, Car = ap.Car, PartType = ap.PartType, Color = ap.Color };
+                db.SoldParts.Add(sp);
                 ap.Count--;
                 db.SaveChanges();
             }
