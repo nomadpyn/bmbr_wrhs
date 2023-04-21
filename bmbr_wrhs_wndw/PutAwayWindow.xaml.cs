@@ -68,7 +68,11 @@ namespace bmbr_wrhs_wndw
 
         private void putButton_Click(object sender, RoutedEventArgs e)
         {
-            GetClass.putAwayPart(this.AutoPartId);
+            MessageBoxResult result = MessageBox.Show("Вы хотите убрать деталь со склада. Вы уверены?","Предупреждение",MessageBoxButton.YesNo,MessageBoxImage.Warning);
+            if (result == MessageBoxResult.Yes)
+            {
+                GetClass.putAwayPart(this.AutoPartId);
+            }
             this.Close();
         }
     }
