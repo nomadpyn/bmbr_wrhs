@@ -58,5 +58,18 @@ namespace bmbr_wrhs
             return this.ColorName;
         }
     }
+    public class SoldPart
+    {
+        public int Id { get; set; }
+        public DateTime Date { get; set; }
+        public PartType? PartType { get; set; }
+        public Car? Car { get; set; }
+        public CarColor? Color { get; set; }
+
+        public override string ToString()
+        {
+            return $"Продажа {this.Date.ToString()} {this.PartType} {this.Car} {this.Color}";
+        }
+    }
 
 }
