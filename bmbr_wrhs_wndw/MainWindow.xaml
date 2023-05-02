@@ -24,7 +24,7 @@
         <Button Name="sell_button" Grid.Column="2" Grid.Row="1" Margin="10" Click="sell_button_Click">Списать деталь</Button>
         <Button Name="load_all_button" Grid.Column="2" Grid.Row="2" Margin="10" Click="load_all_button_Click">Загрузить все</Button>
         <Button Name="load_not_null_button" Grid.Column="2" Grid.Row="3" Margin="10" Click="load_not_null_button_Click">Загрузить наличие</Button>
-        <Button Name="add_button" Grid.Column="2" Grid.Row="6" Margin="10" Click="sell_button_Click">Провести приход</Button>
+        <Button Name="add_button" Grid.Column="2" Grid.Row="6" Margin="10" Click="add_button_Click">Провести приход</Button>
         <DataGrid Name="bumber_data_grid" Grid.RowSpan="7" Grid.Column="0" Grid.Row="0" FontSize="16" GridLinesVisibility="None"/>
     </Grid>
 </Window>

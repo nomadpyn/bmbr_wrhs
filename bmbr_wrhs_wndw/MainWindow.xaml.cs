@@ -1,4 +1,5 @@
 ﻿using bmbr_wrhs;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,6 +63,31 @@ namespace bmbr_wrhs_wndw
             PutAwayWindow nw = new();
             nw.Owner = this;
             nw.ShowDialog();
+        }
+
+        private void add_button_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog ofd = new();
+            ofd.InitialDirectory = "c:\\";
+            ofd.Filter = "csv files (*.csv)|*.csv";
+            ofd.RestoreDirectory = true;
+
+            if(ofd.ShowDialog() == true)
+            {
+                string FilePath = ofd.FileName;
+
+                var result = CsvLoader.getPartsFromCSV(FilePath);
+
+                if (result[0] == "ok")
+                {
+                    string message = result[2] + "\n" + result[3] + "\n" + result[4] + "\n" + result[5] + "\n" + result[6];
+                    MessageBox.Show(message, result[1]);
+                }
+                else
+                {
+                    MessageBox.Show(result[1], "Ошибка");
+                }
+            }
         }
     }
 }
