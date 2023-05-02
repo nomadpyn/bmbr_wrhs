@@ -5,7 +5,12 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>images\bm_wh_logo.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="images\bm_wh_logo.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\bmbr_wrhs\bmbr_wrhs.csproj" />
