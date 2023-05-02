@@ -14,37 +14,61 @@ namespace bmbr_wrhs
 {
     public static class CsvLoader
     {
-        public static void getPartsFromCSV(string csvFileName)
+        public static string [] getPartsFromCSV(string csvFileName)
         {
-            string Fulltext;
-            using (StreamReader sr = new StreamReader(csvFileName))
+            try
             {
-                while (!sr.EndOfStream)
+                string Fulltext;
+                int[] result = new int[5];
+                using (StreamReader sr = new StreamReader(csvFileName))
                 {
-                    Fulltext = sr.ReadToEnd().ToString(); 
-                    string[] rows = Fulltext.Split('\n');                    
-                    for (int i = 0; i < rows.Count() - 1; i++)
+                    while (!sr.EndOfStream)
                     {
-                        string[] rowValues = rows[i].Split(';');
+                        Fulltext = sr.ReadToEnd().ToString();
+                        string[] rows = Fulltext.Split('\n');
+                        
+                        for (int i = 0; i < rows.Count() - 1; i++)
                         {
-                            saveToDB(rowValues);
+                            string[] rowValues = rows[i].Split(';');
+                            {
+                                saveToDB(rowValues, ref result);
+                            }
                         }
-                    }                   
+                    }
                 }
+                return new[]
+                    {
+                    "ok",
+                    "Данные успешно добавлены в БД",
+                    $"Существующих записей обновлено: {result[0]}",
+                    $"Новых записей добавлено: {result[1]}",
+                    $"Новых типов деталей добавлено: {result[2]}",
+                    $"Новых автомобилей: {result[3]}",
+                    $"Новых цветов: {result[4]}"
+                    };
+            }
+            catch(Exception ex)
+            {
+                return new[]
+                    {
+                    "error",
+                    ex.Message
+                    };
+             
             }
         }
-        private static void saveToDB(string[] data)
+        private static void saveToDB(string[] data, ref int[] result)
         {
             AppContext db = new();
             AutoPart AP = new();
 
             var datatype = db.PartType
                              .FirstOrDefault(p => p.TypeName == data[0]);
-            AP.PartType = addPartType(datatype, data[0]);
+            AP.PartType = addPartType(datatype, data[0], ref result[2]);
 
             var cartype = db.Car
                             .FirstOrDefault(c => c.CarName == data[1]);
-            AP.Car = addCar(cartype, data[1]);
+            AP.Car = addCar(cartype, data[1], ref result[3]);
             
             var colortype = db.CarColor
                               .Where(cl => cl.Color.ColorName == data[2])
@@ -54,7 +78,7 @@ namespace bmbr_wrhs
                               .FirstOrDefault(cr => cr.CarBelong.CarName == data[1]);
             var colorDB = db.Color
                             .FirstOrDefault(cl => cl.ColorName == data[2]);
-            AP.Color = addColor(colortype, data[2], colorDB, AP.Car);
+            AP.Color = addColor(colortype, data[2], colorDB, AP.Car, ref result[4]);
             
             int count = Int32.Parse(data[3]);
             int selfPrice = Int32.Parse(data[4]);
@@ -69,41 +93,45 @@ namespace bmbr_wrhs
                 AP.Count = count;
                 AP.SelfPrice = selfPrice;
                 db.Autoparts.Add(AP);
+                result[1]++;
             }
             else
             {
                 ExistPart.Count += count;
                 ExistPart.SelfPrice = selfPrice;
+                result[0]++;
             }
             db.SaveChanges();
             db.Dispose();
 
         }
-        private static PartType addPartType(PartType searchFromDB, string typeCVS)
+        private static PartType addPartType(PartType searchFromDB, string typeCVS, ref int newPart)
         {
             PartType pt;
             if (searchFromDB == null)
             {
                 pt = new();
                 pt.TypeName = typeCVS;
+                newPart++;
             }
             else
                 pt = searchFromDB;
             return pt;
         }
-        private static Car addCar(Car searchFromDB, string carCVS)
+        private static Car addCar(Car searchFromDB, string carCVS, ref int newCar)
         {
             Car car;
             if (searchFromDB == null)
             {
                 car = new();
                 car.CarName = carCVS;
+                newCar++;
             }
             else
                 car = searchFromDB;
             return car;
         }
-        private static CarColor addColor(CarColor searchFromDB,string colorCVS, Color searchColor, Car colorCar)
+        private static CarColor addColor(CarColor searchFromDB,string colorCVS, Color searchColor, Car colorCar, ref int newColor)
         {
             CarColor color;
             if (searchFromDB == null)
@@ -114,6 +142,7 @@ namespace bmbr_wrhs
                 {
                     color.Color = new();
                     color.Color.ColorName = colorCVS;
+                    newColor++;
                 }
                 else
                     color.Color = searchColor;
