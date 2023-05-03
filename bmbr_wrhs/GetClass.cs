@@ -129,8 +129,28 @@ namespace bmbr_wrhs
                 .Include(u => u.Color)
                 .ThenInclude(c => c!.Color)
                 .FirstOrDefault(n => n.Car.CarName == name && n.PartType.TypeName == part && n.Color.Color.ColorName == color);
-            db.Dispose();
+            db.Dispose();            
                 return data;
+            
         }
+        public static List<string> allDataInString()
+        {
+            AppContext db = new();
+            var parts = db.PartType
+                .Select(p => p.TypeName)
+                .ToList();
+            var cars = db.Car
+                .Select(c => c.CarName)
+                .ToList();
+            var colors = db.Color
+                .Select(c => c.ColorName)
+                .ToList();
+            db.Dispose();
+            List<string> result = new List<string>();
+            result.AddRange(parts);
+            result.AddRange(cars);
+            result.AddRange(colors);
+        return result;
+        } 
     }
 }
