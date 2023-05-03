@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /bmbr_wrhs/App.config
 /bmbr_wrhs_wndw/App.config
+/bmbr_wrhs_bot/App.config

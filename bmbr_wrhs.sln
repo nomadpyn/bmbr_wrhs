@@ -5,7 +5,9 @@ VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "bmbr_wrhs", "bmbr_wrhs\bmbr_wrhs.csproj", "{EEE46713-A1D2-4A6C-90C3-511B1594331C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bmbr_wrhs_wndw", "bmbr_wrhs_wndw\bmbr_wrhs_wndw.csproj", "{1DBBC319-9FE9-4698-9368-55E1826B343F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "bmbr_wrhs_wndw", "bmbr_wrhs_wndw\bmbr_wrhs_wndw.csproj", "{1DBBC319-9FE9-4698-9368-55E1826B343F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bmbr_wrhs_bot", "bmbr_wrhs_bot\bmbr_wrhs_bot.csproj", "{9499CBF2-CCEB-450F-9B42-7DE429CE2081}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{1DBBC319-9FE9-4698-9368-55E1826B343F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1DBBC319-9FE9-4698-9368-55E1826B343F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1DBBC319-9FE9-4698-9368-55E1826B343F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9499CBF2-CCEB-450F-9B42-7DE429CE2081}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9499CBF2-CCEB-450F-9B42-7DE429CE2081}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9499CBF2-CCEB-450F-9B42-7DE429CE2081}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9499CBF2-CCEB-450F-9B42-7DE429CE2081}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
