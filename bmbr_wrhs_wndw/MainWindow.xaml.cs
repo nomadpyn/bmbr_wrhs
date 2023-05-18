@@ -1,34 +1,25 @@
 ﻿using bmbr_wrhs;
 using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Markup;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace bmbr_wrhs_wndw
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
+    // Начальное окно программы 
+
     public partial class MainWindow : Window
     {
+        // поля для получения id ТС и цвета из окна поиска
         public int searchCarId { get; set; }
         public int searchColorId { get;set; }
+
+        // Конструктор по умолчанию
+
         public MainWindow()
         {
             InitializeComponent();
         }
+
+        // Обработка нажатия кнопки "Загрузить все", для загрузки всей номенклатуры из БД
 
         private void load_all_button_Click(object sender, RoutedEventArgs e)
         {
@@ -36,20 +27,29 @@ namespace bmbr_wrhs_wndw
             this.bumber_data_grid.ItemsSource = GetClass.getAllAutopartsFromDB();
         }
 
+        // Обработка нажатия кнопки "Загрузить наличие", для загрузки всех деталей в наличии
+
         private void load_not_null_button_Click(object sender, RoutedEventArgs e)
         {
             this.bumber_data_grid.ItemsSource = null;
             this.bumber_data_grid.ItemsSource = GetClass.getPartsNotNull();
         }
 
+        // Обработка нажатия кнопки "Найти деталь", вызов окна SearchWindow
+
         private void search_button_Click(object sender, RoutedEventArgs e)
         {
             this.searchCarId = 0;
             this.searchColorId = 0;
             this.bumber_data_grid.ItemsSource = null;
+
+            // Вызов нового окна поиска
+
             SearchWindow nw = new();
             nw.Owner = this;
             nw.ShowDialog();
+
+            // нахождение детали по двум id, если все успешно
 
             if(this.searchCarId>0 && this.searchColorId > 0)
             {
@@ -58,25 +58,38 @@ namespace bmbr_wrhs_wndw
             }
         }
 
+        // Обработка нажатия кнопик "Списать деталь", вызов окна PutAwayWindow
+
         private void sell_button_Click(object sender, RoutedEventArgs e)
         {
+
+            //Вызов окна списания
+
             PutAwayWindow nw = new();
             nw.Owner = this;
             nw.ShowDialog();
         }
 
+        // Обработка нажатия кнопки "Провести приход", с помощью CsvLoader
+
         private void add_button_Click(object sender, RoutedEventArgs e)
         {
+            // Создаем OpenFileDialog по поиску csv
+
             OpenFileDialog ofd = new();
             ofd.InitialDirectory = "c:\\";
             ofd.Filter = "csv files (*.csv)|*.csv";
             ofd.RestoreDirectory = true;
+
+            // если все успешно, то загружаем данные в БД
 
             if(ofd.ShowDialog() == true)
             {
                 string FilePath = ofd.FileName;
 
                 var result = CsvLoader.getPartsFromCSV(FilePath);
+                
+                // если загрузка прошла успешно, выводим MessageBox с информацией о загруженных позициях, в противном случае код ошибки
 
                 if (result[0] == "ok")
                 {

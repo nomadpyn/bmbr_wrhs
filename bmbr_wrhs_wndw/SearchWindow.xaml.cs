@@ -1,31 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using bmbr_wrhs;
 
 namespace bmbr_wrhs_wndw
 {
-    /// <summary>
-    /// Interaction logic for SearchWindow.xaml
-    /// </summary>
+    // Окно поиска детали
     public partial class SearchWindow : Window
     {
+
+        // Конструктор по умолчанию
+
         public SearchWindow()
         {
             InitializeComponent();
             var data = GetClass.getAllCars();
             autoBox.ItemsSource = data;
         }
+
+        // Обработка изменения состония autoBox в окне
 
         private void autoBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -35,12 +28,17 @@ namespace bmbr_wrhs_wndw
             
         }
 
+        // Обработка нажатия кнопки "Найти"
+
         private void searchButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 int carId = (int)autoBox.SelectedValue;
                 int colorId = (int)colorBox.SelectedValue;
+
+                // если данные больше 0, тогда возвращаем их в основую форму и там происходит вывод информации в DataGrid
+
                 if (carId > 0 && colorId > 0)
                 {
                     MainWindow main = this.Owner as MainWindow;

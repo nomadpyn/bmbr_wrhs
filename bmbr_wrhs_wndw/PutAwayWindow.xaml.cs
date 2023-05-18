@@ -1,32 +1,25 @@
 ﻿using bmbr_wrhs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace bmbr_wrhs_wndw
 {
-    /// <summary>
-    /// Interaction logic for PutAwayWindow.xaml
-    /// </summary>
+    // Окно списания детали
     public partial class PutAwayWindow : Window
     {
+        // поле для хранения id детали
         private int AutoPartId;
+
+        // Конструктор по умолчанию
+
         public PutAwayWindow()
         {
             InitializeComponent();
             var data = GetClass.getAllCars();
             autoBox.ItemsSource = data;
         }
+
+        // обработка изменения состояния autoBox в окне
 
         private void autoBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -36,9 +29,14 @@ namespace bmbr_wrhs_wndw
             colorBox.ItemsSource = data;
         }
 
+        // обработка изменения состояния colorBox в окне
+
         private void colorBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             typeBox.ItemsSource = null;
+
+            // если цвет ТС выбран, то заполняются типы детали
+
             if (colorBox.ItemsSource != null)
             {
                 var data = GetClass.getAutoPartsbySearch((int)autoBox.SelectedValue, (int)colorBox.SelectedValue);
@@ -47,12 +45,19 @@ namespace bmbr_wrhs_wndw
             }
         }
 
+        // обработка изменения состояние typeBox в окне
+
         private void typeBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // если выбрано ТС, цвет и тип детали, то выводится деталь по поиску
+
             if (autoBox.ItemsSource != null && colorBox.ItemsSource != null && typeBox.ItemsSource != null)
             {                
                 var data = GetClass.getAutoPartsbySearch((int)autoBox.SelectedValue, (int)colorBox.SelectedValue);
                 this.partCount.Text = "Количество на складе: " + data[0].Count;
+
+                // если количество деталей больше 0, то возможно ее списание
+
                 if (data[0].Count > 0)
                 {
                     this.putButton.IsEnabled = true;
@@ -65,6 +70,8 @@ namespace bmbr_wrhs_wndw
                 this.partCount.Text = "Количество на складе:";
             }
         }
+
+        // Обработка нажатия кнопки "Убрать", с предупреждением в MessageBox
 
         private void putButton_Click(object sender, RoutedEventArgs e)
         {
