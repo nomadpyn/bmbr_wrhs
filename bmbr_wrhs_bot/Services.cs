@@ -6,20 +6,30 @@ using bmbr_wrhs;
 
 namespace bmbr_wrhs_bot
 {
+    // статический класс для работы бота
     public static class Services
     {
+        // поля для хранения информации о брендах, разрешенных слова и разрешенных пользователях
+
         static string[] brands;
         static List<string> allowedWords;
         static long[] allowedId;
 
+        // коллекция для сборки запроса в базу данных
+
         static Dictionary<long, List<string>> data = new Dictionary<long, List<string>>();
         
+        // конструктор по умолчанию
+
         static Services()
         {
             loadStartBrands();
             loadAllowedId();
             loadAllowedWords();
         }
+
+        // бот получает обновления в чате от пользователя
+
         static internal async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {            
             if (update.Message is not { } message)
@@ -28,6 +38,8 @@ namespace bmbr_wrhs_bot
                 return;            
 
             long chatId = message.Chat.Id;
+
+            // если запрещенный пользователь пытался получить доступ к боту, то выходит сообщение, в противном случае продолжается работа
 
             if(!allowedId.Contains(chatId))
             {
@@ -40,6 +52,8 @@ namespace bmbr_wrhs_bot
             string model = await ReturnWordModel(message);
             
             Console.WriteLine($"Получил сообщение '{messageText}' в чате {chatId}.");
+
+            // запуск методов в зависимости от того, какой текст пришел боту
 
                 switch (messageText)
                 {
@@ -88,6 +102,9 @@ namespace bmbr_wrhs_bot
                 }
             };
         }
+
+        // метод обработки ошибки API
+
         static internal Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
         {
             string ErrorMessage = exception switch
@@ -99,6 +116,9 @@ namespace bmbr_wrhs_bot
             Console.WriteLine(ErrorMessage);
             return Task.CompletedTask;
         }
+
+        // Стартовое сообщения для пользователя 
+
         static async Task<Message> SendStartMessage(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken)
         {
             string text = "Добро пожаловать в чат бот Склад бамперов\nЧтобы начать работу напишите \"Cклад\"";
@@ -107,6 +127,9 @@ namespace bmbr_wrhs_bot
                 text: text,
                 cancellationToken: cancellationToken);
         }
+
+        // Сообщение о запрете работы с ботом
+
         static async Task<Message> SendNotAllowedMessage(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken)
         {
             string text = "Доступ запрещен";
@@ -115,9 +138,15 @@ namespace bmbr_wrhs_bot
                 text: text,
                 cancellationToken: cancellationToken);
         }
+
+        // Создание стартовой ReplyKeyboard для пользователя с марками ТС
+
         static async Task<Message> SendStartKeyboard(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken)
         {            
-            List<KeyboardButton[]> buttons = new();            
+            List<KeyboardButton[]> buttons = new();       
+            
+            // создание кнопок в зависимости от четного или нечетного количества брендов 
+
             for (int i=0; i < brands.Length;)
             {
                 if(i !=brands.Length-1)
@@ -125,7 +154,10 @@ namespace bmbr_wrhs_bot
                 else
                     buttons.Add(new KeyboardButton[] { brands[brands.Length - 1] });
                 i += 2;
-            };            
+            };
+            
+            // создание клавиатуры из массива кнопок
+
             ReplyKeyboardMarkup replyKeyboardMarkup = new(buttons.ToArray())
             {
                 ResizeKeyboard = true,
@@ -138,12 +170,17 @@ namespace bmbr_wrhs_bot
                 replyMarkup: replyKeyboardMarkup,
                 cancellationToken: cancellationToken);
         }
+
+        // Создание клавиатур, для показа пользователю в иерархическом порядке
+
         static async Task<Message> SendModelKeyboard(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, string inbox)
         {
             List<string> search = null;
             List<string> cars = GetClass.getModelsByName(inbox);
             List<string> colors = GetClass.getCarColor(inbox);
             List<string> parts = GetClass.getPartsTypes();
+
+            // создание клавиатуры, в зависимости от того, где в какой коллекции содержится приходящее сообщения от пользователя
 
             if (brands.Contains(inbox))
             {
@@ -163,6 +200,9 @@ namespace bmbr_wrhs_bot
                     {
                     search = null;
                     }
+
+            // если search пустой, следовательно выдаем ответ на полный запрос пользователю, в противном случае идет следующая клавиатура по иерархии поиска
+
             if (search != null)
             {
                 List<KeyboardButton[]> buttons = new();
@@ -187,10 +227,16 @@ namespace bmbr_wrhs_bot
                 return await getFullPart(message.Chat.Id, botClient, cancellationToken);
             }
         }
+
+        // возвращает пользователю искомую запчасть, либо отказ, либо ошибку в случае некорректного заполнения коллекции поиска Dictionary 'data'
+
         static async Task<Message> getFullPart(long chatId,ITelegramBotClient botClient, CancellationToken cancellationToken)
         {
             string[]? part = data[chatId].TakeLast(3).ToArray();
             int l = part.Length;
+
+            // возвращает строку ошибки, в случае, если нет элементов в коллекции для создания запроса в БД
+
             if (l < 3)
             {
                 return await botClient.SendTextMessageAsync(
@@ -199,13 +245,21 @@ namespace bmbr_wrhs_bot
                 cancellationToken: cancellationToken);
             }
             
+            // создаем запрос в БД, для поиска
+
             AutoPart? carSearch = GetClass.getPartFromBot(part[2], part[0], part[1]);
             string output;
+
+            // возврат сообщения в случае отсутствия такой запчасти в БД
+
             if (carSearch == null)
             {
                 output = "Нет такой запчасти";
                 Console.WriteLine($"Пользователь {chatId} получил пустой вывод.");
             }
+
+            // собирает строку о наличии и цене запчасти, в случае нахождения ее в БД
+
             else
             {
                 output = carSearch.ToString();
@@ -216,7 +270,10 @@ namespace bmbr_wrhs_bot
                 chatId: chatId,
                 text: output,
                 cancellationToken: cancellationToken);
-        }        
+        }
+        
+        // получение последнего элемента в коллекции поиска для пользователя, который запросил метод
+
         static async Task<Message> GetMyLastMessage(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken)
         {
             string text = "Для такого пользователя нет списка сообщений";
@@ -239,6 +296,9 @@ namespace bmbr_wrhs_bot
                 replyMarkup: new ReplyKeyboardRemove(),
                 cancellationToken: cancellationToken);
         }
+
+        // очистка коллекции поиска для конкретного пользователя
+
         static async Task<Message> ClearData(ITelegramBotClient botClient, long chatId, CancellationToken cancellationToken)
         {
             string text = "Для такого пользователя нет списка поиска";
@@ -253,6 +313,9 @@ namespace bmbr_wrhs_bot
                 replyMarkup: new ReplyKeyboardRemove(),
                 cancellationToken: cancellationToken);
         }
+
+        // отправка навигационного сообщения
+
         static async Task<Message> SendHelpMessage(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken)
         {
             string text = "Для запуска работы используйте команду \"Склад\"\n" +
@@ -264,6 +327,9 @@ namespace bmbr_wrhs_bot
                 cancellationToken: cancellationToken);
 
         }
+
+        // возвращение строки в основном метод работы бота, и добавление его в коллекцию при прохождении условий отбора
+
         static async Task<string> ReturnWordModel(Message message)
         {
             long chatId = message.Chat.Id;
@@ -289,11 +355,16 @@ namespace bmbr_wrhs_bot
             return model;
         }
 
+        // загрузка из БД, слов для работы бота 
+
         static void loadAllowedWords()
         {
             allowedWords = GetClass.allDataInString();
             allowedWords.AddRange(brands);
         }
+
+        // загрузка из csv файла id пользователей, допущенных к работе
+
         static void loadAllowedId()
         {
             string Fulltext;           
@@ -311,6 +382,9 @@ namespace bmbr_wrhs_bot
                 }
             }
         }
+
+        // загрузка из csv данных для стартовой клавиатуры
+       
         static void loadStartBrands()
         {
             string Fulltext;
