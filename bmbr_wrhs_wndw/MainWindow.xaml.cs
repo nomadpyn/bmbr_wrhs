@@ -1,5 +1,6 @@
 ﻿using bmbr_wrhs;
 using Microsoft.Win32;
+using System;
 using System.Windows;
 
 namespace bmbr_wrhs_wndw
@@ -17,6 +18,7 @@ namespace bmbr_wrhs_wndw
         public MainWindow()
         {
             InitializeComponent();
+            this.addDateNow();
         }
 
         // Обработка нажатия кнопки "Загрузить все", для загрузки всей номенклатуры из БД
@@ -25,6 +27,7 @@ namespace bmbr_wrhs_wndw
         {
             this.bumber_data_grid.ItemsSource = null;
             this.bumber_data_grid.ItemsSource = GetClass.getAllAutopartsFromDB();
+            this.fillStatusBar();
         }
 
         // Обработка нажатия кнопки "Загрузить наличие", для загрузки всех деталей в наличии
@@ -33,6 +36,7 @@ namespace bmbr_wrhs_wndw
         {
             this.bumber_data_grid.ItemsSource = null;
             this.bumber_data_grid.ItemsSource = GetClass.getPartsNotNull();
+            this.fillStatusBar();
         }
 
         // Обработка нажатия кнопки "Найти деталь", вызов окна SearchWindow
@@ -56,6 +60,7 @@ namespace bmbr_wrhs_wndw
                 var data = GetClass.getAutoPartsbySearch(this.searchCarId, this.searchColorId);
                 this.bumber_data_grid.ItemsSource = data;
             }
+            this.fillStatusBar();
         }
 
         // Обработка нажатия кнопик "Списать деталь", вызов окна PutAwayWindow
@@ -101,6 +106,22 @@ namespace bmbr_wrhs_wndw
                     MessageBox.Show(result[1], "Ошибка");
                 }
             }
+        }
+
+        private void addDateNow()
+        {
+            DateTime date = DateTime.Now;
+            this.Title += $" - Сегодня {date.Day}.{date.Month}.{date.Year}"; 
+        }
+
+        private void fillStatusBar()
+        {
+            int allCount = 0;
+            foreach(AutoPart part in this.bumber_data_grid.Items){
+                allCount += part.Count;
+            }
+            this.statusBarLoadData.Text = $" Загружено номенклатуры {this.bumber_data_grid.Items.Count}. Всего позиций на складе {allCount}";
+            
         }
     }
 }
