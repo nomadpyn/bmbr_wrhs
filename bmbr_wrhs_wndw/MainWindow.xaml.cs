@@ -108,11 +108,15 @@ namespace bmbr_wrhs_wndw
             }
         }
 
+        // Добавление текущей даты к имени главного окна при каждом запуске
+
         private void addDateNow()
         {
             DateTime date = DateTime.Now;
             this.Title += $" - Сегодня {date.Day}.{date.Month}.{date.Year}"; 
         }
+
+        // добавление информации о загруженных в datagrid позициях в statusbar
 
         private void fillStatusBar()
         {
