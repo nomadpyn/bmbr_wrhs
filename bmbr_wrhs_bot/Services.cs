@@ -366,7 +366,7 @@ namespace bmbr_wrhs_bot
             allowedWords.AddRange(brands);
         }
 
-        // загрузка из csv файла id пользователей, допущенных к работе
+        // загрузка из csv файла id пользователей, допущенных к работе (закрытие программы при ошибке загрузки)
 
         static void loadAllowedId()
         {
@@ -394,8 +394,8 @@ namespace bmbr_wrhs_bot
             }            
         }
 
-        // загрузка из csv данных для стартовой клавиатуры
-       
+        // загрузка из csv данных для стартовой клавиатуры (закрытие программы при ошибке загрузки)
+
         static void loadStartBrands()
         {
             string Fulltext;
