@@ -9,7 +9,7 @@ namespace bmbr_wrhs_bot
         public txtLogger() 
         {
             this.path = createDirectory();
-            this.dateString = DateTime.Now.Day.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Year.ToString();            
+            this.dateString = '_' +DateTime.Now.Day.ToString() +'_'+ DateTime.Now.Month.ToString() + '_' + DateTime.Now.Year.ToString();            
         }
 
         public async void log(string message)

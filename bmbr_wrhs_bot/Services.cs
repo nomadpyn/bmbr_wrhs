@@ -14,6 +14,7 @@ namespace bmbr_wrhs_bot
         static string[] brands;
         static List<string> allowedWords;
         static long[] allowedId;
+        static txtLogger myLogger;
 
         // коллекция для сборки запроса в базу данных
 
@@ -23,9 +24,10 @@ namespace bmbr_wrhs_bot
 
         static Services()
         {
+            myLogger = new();
             loadStartBrands();
             loadAllowedId();
-            loadAllowedWords();
+            loadAllowedWords();            
         }
 
         // бот получает обновления в чате от пользователя
@@ -45,15 +47,15 @@ namespace bmbr_wrhs_bot
             {
                 Task<Message> action = SendNotAllowedMessage(botClient, message, cancellationToken);
                 Message sentMessage = await action;
-                Console.WriteLine($"{chatId} пробовал получить доступ к боту");                
+                logBotMessage($"{chatId} пробовал получить доступ к боту");
             }
             else 
             {            
             string model = await ReturnWordModel(message);
             
-            Console.WriteLine($"Получил сообщение '{messageText}' в чате {chatId}.");
+            logBotMessage($"Получил сообщение '{messageText}' в чате {chatId}.");
 
-            // запуск методов в зависимости от того, какой текст пришел боту
+                // запуск методов в зависимости от того, какой текст пришел боту
 
                 switch (messageText)
                 {
@@ -61,42 +63,42 @@ namespace bmbr_wrhs_bot
                         {
                             Task<Message> action = SendStartMessage(botClient, message, cancellationToken);
                             Message sentMessage = await action;
-                            Console.WriteLine($"Сообщение отправлено с Id: {sentMessage.MessageId}");
+                            logBotMessage($"Сообщение отправлено с Id: {sentMessage.MessageId}");
                             break;
                         }
                     case "Склад":
                         {
                             Task<Message> action = SendStartKeyboard(botClient, message, cancellationToken);
                             Message sentMessage = await action;
-                            Console.WriteLine($"Сообщение отправлено с Id: {sentMessage.MessageId}");
+                            logBotMessage($"Сообщение отправлено с Id: {sentMessage.MessageId}");
                             break;
                         }
                     case "Очистить":
                         {
                             Task<Message> action = ClearData(botClient, message.Chat.Id, cancellationToken);
                             Message sentMessage = await action;
-                            Console.WriteLine($"Сообщение отправлено с Id: {sentMessage.MessageId}");
+                            logBotMessage($"Сообщение отправлено с Id: {sentMessage.MessageId}");
                             break;
                         }
                     case "Getlast":
                         {
                             Task<Message> action = GetMyLastMessage(botClient, message, cancellationToken);
                             Message sentMessage = await action;
-                            Console.WriteLine($"Сообщение отправлено с Id: {sentMessage.MessageId}");
+                            logBotMessage($"Сообщение отправлено с Id: {sentMessage.MessageId}");
                             break;
                         }
                     case string value when value == model:
                         {
                             Task<Message> action = SendModelKeyboard(botClient, message, cancellationToken, value);
                             Message sentMessage = await action;
-                            Console.WriteLine($"Сообщение отправлено с Id: {sentMessage.MessageId}");
+                            logBotMessage($"Сообщение отправлено с Id: {sentMessage.MessageId}");
                             break;
                         }
                     default:
                         {
                             Task<Message> action = SendHelpMessage(botClient, message, cancellationToken);
                             Message sentMessage = await action;
-                            Console.WriteLine($"Сообщение отправлено с Id: {sentMessage.MessageId}");
+                            logBotMessage($"Сообщение отправлено с Id: {sentMessage.MessageId}");
                             break;
                         }
                 }
@@ -113,7 +115,7 @@ namespace bmbr_wrhs_bot
                     => $"Ошибка API Telegram:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
                 _ => exception.ToString()
             };
-            Console.WriteLine(ErrorMessage);
+            logBotMessage(ErrorMessage);
             return Task.CompletedTask;
         }
 
@@ -255,7 +257,8 @@ namespace bmbr_wrhs_bot
             if (carSearch == null)
             {
                 output = "Нет такой запчасти";
-                Console.WriteLine($"Пользователь {chatId} получил пустой вывод.");
+                logBotMessage($"Пользователь {chatId} получил пустой вывод.");
+                myLogger.log($"Пользователь {chatId} получил пустой вывод.");
             }
 
             // собирает строку о наличии и цене запчасти, в случае нахождения ее в БД
@@ -263,7 +266,7 @@ namespace bmbr_wrhs_bot
             else
             {
                 output = carSearch.ToString();
-                Console.WriteLine($"Пользователь {chatId} получил вывод {output}.");
+                logBotMessage($"Пользователь {chatId} получил вывод {output}.");
             }
             await ClearData(botClient, chatId, cancellationToken);
             return await botClient.SendTextMessageAsync(
@@ -367,20 +370,28 @@ namespace bmbr_wrhs_bot
 
         static void loadAllowedId()
         {
-            string Fulltext;           
-            using (StreamReader sr = new StreamReader("bmbrIdAllowed.csv"))
+            string Fulltext;
+            try
             {
-                while (!sr.EndOfStream)
+                using (StreamReader sr = new StreamReader("bmbrIdAllowed.csv"))
                 {
-                    Fulltext = sr.ReadToEnd().ToString();
-                    string[] rows = Fulltext.Split('\n');
-                    allowedId = new long[rows.Length - 1];
-                    for (int i = 0; i < rows.Count() - 1; i++)
+                    while (!sr.EndOfStream)
                     {
-                        allowedId[i] = Convert.ToInt64(rows[i]);                        
+                        Fulltext = sr.ReadToEnd().ToString();
+                        string[] rows = Fulltext.Split('\n');
+                        allowedId = new long[rows.Length - 1];
+                        for (int i = 0; i < rows.Count() - 1; i++)
+                        {
+                            allowedId[i] = Convert.ToInt64(rows[i]);
+                        }
                     }
                 }
             }
+            catch(FileNotFoundException ex)
+            {
+                logBotMessage(ex.Message + "\nПрограмма будет закрыта");
+                Environment.Exit(0);
+            }            
         }
 
         // загрузка из csv данных для стартовой клавиатуры
@@ -388,19 +399,33 @@ namespace bmbr_wrhs_bot
         static void loadStartBrands()
         {
             string Fulltext;
-            using (StreamReader sr = new StreamReader("startBrands.csv"))
+            try
             {
-                while (!sr.EndOfStream)
+                using (StreamReader sr = new StreamReader("startBrands.csv"))
                 {
-                    Fulltext = sr.ReadToEnd().ToString();
-                    string[] rows = Fulltext.Split('\n');
-                    brands = new string[rows.Length - 1];
-                    for (int i = 0; i < rows.Count() - 1; i++)
+                    while (!sr.EndOfStream)
                     {
-                        brands[i] = rows[i].Trim();
+                        Fulltext = sr.ReadToEnd().ToString();
+                        string[] rows = Fulltext.Split('\n');
+                        brands = new string[rows.Length - 1];
+                        for (int i = 0; i < rows.Count() - 1; i++)
+                        {
+                            brands[i] = rows[i].Trim();
+                        }
                     }
                 }
             }
+            catch (FileNotFoundException ex)
+            {
+                logBotMessage(ex.Message + "\nПрограмма будет закрыта");
+                Environment.Exit(0);
+            }
+        }
+
+        static void logBotMessage(string message)
+        {
+            Console.WriteLine(message);
+            myLogger.log(message);
         }
     }
 }
