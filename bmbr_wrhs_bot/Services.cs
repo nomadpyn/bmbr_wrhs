@@ -422,6 +422,8 @@ namespace bmbr_wrhs_bot
             }
         }
 
+        // вывод сообщения в консоль и логирование в файл, с помощью myLogger
+
         static void logBotMessage(string message)
         {
             Console.WriteLine(message);
