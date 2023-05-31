@@ -15,6 +15,7 @@ namespace bmbr_wrhs_wndw
             InitializeComponent();
         }
 
+        // обработка нажатия кнопки "Найти", в соответствии с заполненим дат ищет списанные детали в БД
         private void searchDateButton_Click(object sender, RoutedEventArgs e)
         {
             sold_data_grid.ItemsSource = null;
@@ -25,13 +26,18 @@ namespace bmbr_wrhs_wndw
             }
         }
 
+        // метод поиска в БД деталей в диапазоне дат
         private List<SoldPart> getSoldPartsByDate()
         {
+            // если дата не выбрана, то ставится по умолчанию текущая дата
+
             DateTime startDate = startDatePicker.SelectedDate == null ? DateTime.Now.Date : startDatePicker.SelectedDate.Value;
             DateTime endDate = endDatePicker.SelectedDate == null ? DateTime.Now.Date : endDatePicker.SelectedDate.Value;
             return GetClass.getSoldPartsByDate(startDate, endDate);
         }
-        
+
+
+        // метод поиска в БД всех списанных деталей
         private List<SoldPart> getAllSoldParts()
         {
             return GetClass.getAllSoldParts();

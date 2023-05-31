@@ -182,6 +182,8 @@ namespace bmbr_wrhs
         return result;
         } 
 
+        // Возвращает List всех списанных деталей
+
         public static List<SoldPart> getAllSoldParts()
         {
             AppContext db = new();
@@ -192,8 +194,14 @@ namespace bmbr_wrhs
                 .ThenInclude(c => c!.Color)
                 .ToList();
             db.Dispose();
-            return soldParts;
+            if (soldParts != null)
+                return soldParts;
+            else
+                return new List<SoldPart>();
+
         }
+
+        // Возвращает List списаных деталей, отсортированных в диапазоне
 
         public static List<SoldPart> getSoldPartsByDate(DateTime start, DateTime end)
         {
@@ -206,7 +214,10 @@ namespace bmbr_wrhs
                 .ThenInclude(c => c!.Color)
                 .ToList();
             db.Dispose();
-            return soldParts;
+            if (soldParts != null)
+                return soldParts;
+            else
+                return new List<SoldPart>();
         }
     }
 }

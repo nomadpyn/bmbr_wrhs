@@ -128,6 +128,7 @@ namespace bmbr_wrhs_wndw
             
         }
 
+        // Обработка нажатия кнопик "Списанные", вызов окна SoldWindow
         private void check_sold_button_Click(object sender, RoutedEventArgs e)
         {
             SoldWindow nw = new();

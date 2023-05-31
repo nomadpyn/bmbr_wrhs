@@ -63,7 +63,6 @@ namespace bmbr_wrhs
         public PartType? PartType { get; set; }
         public Car? Car { get; set; }
         public CarColor? Color { get; set; }
-
         public override string ToString() => $"Продажа {this.Date.ToString()} {this.PartType} {this.Car} {this.Color}";
     }
 }
