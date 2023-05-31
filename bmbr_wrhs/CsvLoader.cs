@@ -60,28 +60,28 @@ namespace bmbr_wrhs
 
             // проверяем на наличие совпадение по имени с уже существующими данными в БД, и заполняем поля AP, методами в зависимости от результат
 
-            var datatype = db.PartType.FirstOrDefault(p => p.TypeName == data[0]);
+            var datatype = db.PartType.FirstOrDefault(p => p.TypeName == data[0].Trim());
 
-            AP.PartType = addPartType(datatype, data[0], ref result[2]);
+            AP.PartType = addPartType(datatype, data[0].Trim(), ref result[2]);
 
-            var cartype = db.Car.FirstOrDefault(c => c.CarName == data[1]);
+            var cartype = db.Car.FirstOrDefault(c => c.CarName == data[1].Trim());
 
-            AP.Car = addCar(cartype, data[1], ref result[3]);
+            AP.Car = addCar(cartype, data[1].Trim(), ref result[3]);
             
             var colortype = db.CarColor
-                              .Where(cl => cl.Color.ColorName == data[2])
+                              .Where(cl => cl.Color.ColorName == data[2].Trim())
                               .Include(cl => cl.Color)
                               .Include(cr => cr.CarBelong)
                               .Where(cr => cr.CarBelong.CarName == AP.Car.CarName)
-                              .FirstOrDefault(cr => cr.CarBelong.CarName == data[1]);
+                              .FirstOrDefault(cr => cr.CarBelong.CarName == data[1].Trim());
 
-            var colorDB = db.Color.FirstOrDefault(cl => cl.ColorName == data[2]);
-            AP.Color = addColor(colortype, data[2], colorDB, AP.Car, ref result[4]);
+            var colorDB = db.Color.FirstOrDefault(cl => cl.ColorName == data[2].Trim());
+            AP.Color = addColor(colortype, data[2].Trim(), colorDB, AP.Car, ref result[4]);
             
             // проставляем количество и себестоимость
 
-            int count = Int32.Parse(data[3]);
-            int selfPrice = Int32.Parse(data[4]);
+            int count = Int32.Parse(data[3].Trim());
+            int selfPrice = Int32.Parse(data[4].Trim());
 
             // проверяем, существует ли у нас уже в базе такая деталь, если да, то меняем у нее количество и цену, если нет, создаем новую (избегаем повторений)
 
