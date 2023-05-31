@@ -88,7 +88,7 @@ namespace bmbr_wrhs
                 .FirstOrDefault(c => c.Id == partId);
             if (ap != null)
             {
-                SoldPart sp = new SoldPart { Date = DateTime.Now, Car = ap.Car, PartType = ap.PartType, Color = ap.Color };
+                SoldPart sp = new SoldPart { Date = DateTime.Now.Date, Car = ap.Car, PartType = ap.PartType, Color = ap.Color };
                 db.SoldParts.Add(sp);
                 ap.Count--;
                 db.SaveChanges();
