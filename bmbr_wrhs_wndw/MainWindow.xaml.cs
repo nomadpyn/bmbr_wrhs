@@ -127,5 +127,12 @@ namespace bmbr_wrhs_wndw
             this.statusBarLoadData.Text = $" Загружено номенклатуры {this.bumber_data_grid.Items.Count}. Всего позиций на складе {allCount}";
             
         }
+
+        private void check_sold_button_Click(object sender, RoutedEventArgs e)
+        {
+            SoldWindow nw = new();
+            nw.Owner = this;
+            nw.ShowDialog();
+        }
     }
 }

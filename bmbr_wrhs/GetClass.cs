@@ -194,5 +194,19 @@ namespace bmbr_wrhs
             db.Dispose();
             return soldParts;
         }
+
+        public static List<SoldPart> getSoldPartsByDate(DateTime start, DateTime end)
+        {
+            AppContext db = new();
+            var soldParts = db.SoldParts
+                .Where(d => (d.Date >= start) && (d.Date <= end))
+                .Include(u => u.PartType)
+                .Include(u => u.Car)
+                .Include(u => u.Color)
+                .ThenInclude(c => c!.Color)
+                .ToList();
+            db.Dispose();
+            return soldParts;
+        }
     }
 }
