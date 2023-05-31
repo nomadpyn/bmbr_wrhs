@@ -181,5 +181,18 @@ namespace bmbr_wrhs
             result.AddRange(colors);
         return result;
         } 
+
+        public static List<SoldPart> getAllSoldParts()
+        {
+            AppContext db = new();
+            var soldParts = db.SoldParts
+                .Include(u => u.PartType)
+                .Include(u => u.Car)
+                .Include(u => u.Color)
+                .ThenInclude(c => c!.Color)
+                .ToList();
+            db.Dispose();
+            return soldParts;
+        }
     }
 }
