@@ -196,7 +196,14 @@ namespace bmbr_wrhs_bot
                 else
                     if (!parts.Contains(data[message.Chat.Id].Last()))
                     {
-                        search = parts;
+                        try
+                        {
+                            search = GetClass.getPartTypeByCar(data[message.Chat.Id][^2]);
+                        }
+                        catch(Exception ex)
+                        {
+                            search = null;
+                        }
                     }
                     else            
                     {
