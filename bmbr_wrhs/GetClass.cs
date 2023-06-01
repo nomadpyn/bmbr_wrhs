@@ -219,5 +219,20 @@ namespace bmbr_wrhs
             else
                 return new List<SoldPart>();
         }
+
+        public static List<string> getPartTypeByCar(string  carName)
+        {
+            AppContext db = new();
+            var data = db.Autoparts
+                .Include(c => c.Car)
+                .Where(c => c.Car.CarName == carName)
+                .Include(p => p.PartType)
+                .Select(p => p.PartType.TypeName)
+                .Distinct()
+                .ToList();
+
+            db.Dispose();
+            return data;
+        }
     }
 }
