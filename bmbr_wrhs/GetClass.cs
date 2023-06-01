@@ -220,6 +220,8 @@ namespace bmbr_wrhs
                 return new List<SoldPart>();
         }
 
+        // Возвращает List строк типов деталей, которые подходят к конкретной модели ТС в БД
+
         public static List<string> getPartTypeByCar(string  carName)
         {
             AppContext db = new();
@@ -230,9 +232,11 @@ namespace bmbr_wrhs
                 .Select(p => p.PartType.TypeName)
                 .Distinct()
                 .ToList();
-
             db.Dispose();
-            return data;
+            if (data != null)
+                return data;
+            else
+                return new List<string>();
         }
     }
 }
