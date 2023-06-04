@@ -1,4 +1,5 @@
 ﻿using bmbr_wrhs;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -54,21 +55,22 @@ namespace bmbr_wrhs_wndw
             if (autoBox.ItemsSource != null && colorBox.ItemsSource != null && typeBox.ItemsSource != null)
             {                
                 var data = GetClass.getAutoPartsbySearch((int)autoBox.SelectedValue, (int)colorBox.SelectedValue);
-                this.partCount.Text = "Количество на складе: " + data[0].Count;
+                int count = data.Where(t => t.Id == (int)typeBox.SelectedValue).Select(c => c.Count).FirstOrDefault();
+                this.partCount.Text = "Количество на складе: " + count;
 
                 // если количество деталей больше 0, то возможно ее списание
 
-                if (data[0].Count > 0)
+                if (count > 0)
                 {
                     this.putButton.IsEnabled = true;
-                    this.AutoPartId = data[0].Id;
+                    this.AutoPartId = data.Where(t => t.Id == (int)typeBox.SelectedValue).Select(i => i.Id).FirstOrDefault();
+                }
+                else
+                {
+                    this.putButton.IsEnabled = false;
                 }
             }
-            else
-            {
-                this.putButton.IsEnabled = false;
-                this.partCount.Text = "Количество на складе:";
-            }
+            
         }
 
         // Обработка нажатия кнопки "Убрать", с предупреждением в MessageBox
