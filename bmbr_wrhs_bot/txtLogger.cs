@@ -9,7 +9,7 @@ namespace bmbr_wrhs_bot
         // поля для хранения пути и строки даты, для добавления к имени файла
 
         private readonly string path;
-        private readonly string dateString;
+        private string dateString;
 
 
         // конструктор по умолчанию
@@ -17,13 +17,13 @@ namespace bmbr_wrhs_bot
         public txtLogger() 
         {
             this.path = createDirectory();
-            this.dateString = '_' +DateTime.Now.Day.ToString() +'_'+ DateTime.Now.Month.ToString() + '_' + DateTime.Now.Year.ToString();            
         }
 
         // основной метод логирования сообщения в файл
 
         public async void log(string message)
         {
+            this.dateString = '_' + DateTime.Now.Day.ToString() + '_' + DateTime.Now.Month.ToString() + '_' + DateTime.Now.Year.ToString();
             string fullPath = path + "\\log" + this.dateString + ".txt";
             using(StreamWriter writer = new(fullPath, true))
             {
