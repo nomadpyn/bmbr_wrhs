@@ -45,9 +45,9 @@ namespace bmbr_wrhs_bot
 
             if(!allowedId.Contains(chatId))
             {
-                Task<Message> action = SendNotAllowedMessage(botClient, message, cancellationToken);
-                Message sentMessage = await action;
                 logBotMessage($"{chatId} пробовал получить доступ к боту");
+                Task<Message> action = SendNotAllowedMessage(botClient, message, cancellationToken);
+                Message sentMessage = await action;                
             }
             else 
             {            
@@ -115,7 +115,7 @@ namespace bmbr_wrhs_bot
                     => $"Ошибка API Telegram:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
                 _ => exception.ToString()
             };
-            logBotMessage(ErrorMessage);
+           logBotMessage(ErrorMessage);
             return Task.CompletedTask;
         }
 
@@ -248,6 +248,7 @@ namespace bmbr_wrhs_bot
 
             if (l < 3)
             {
+                logBotMessage($"{chatId} Ошибка поиска");
                 return await botClient.SendTextMessageAsync(
                 chatId: chatId,
                 text: "Ошибка поиска, попробуй снова",
@@ -264,8 +265,6 @@ namespace bmbr_wrhs_bot
             if (carSearch == null)
             {
                 output = "Нет такой запчасти";
-                logBotMessage($"Пользователь {chatId} получил пустой вывод.");
-                myLogger.log($"Пользователь {chatId} получил пустой вывод.");
             }
 
             // собирает строку о наличии и цене запчасти, в случае нахождения ее в БД
@@ -273,9 +272,9 @@ namespace bmbr_wrhs_bot
             else
             {
                 output = carSearch.ToString();
-                logBotMessage($"Пользователь {chatId} получил вывод {output}.");
             }
             await ClearData(botClient, chatId, cancellationToken);
+            logBotMessage($"{chatId} - {output}.");
             return await botClient.SendTextMessageAsync(
                 chatId: chatId,
                 text: output,
